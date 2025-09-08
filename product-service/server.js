@@ -1,11 +1,22 @@
-import express, { json } from 'express';
+// import express, { json } from 'express';
+// import './telemetry.js'
+import "./otel/init.js";
+import { Hono } from 'hono';
+import { serve } from '@hono/node-server';
 import mongoose from 'mongoose';
+import logger from './logger.js';
+import {responseTimeMiddleware} from "./middleware/metricsMiddleware.js"
+
 const { connect, connection, Schema, model } = mongoose;
 
-const app = express();
+const app = new Hono();
+app.use("*", responseTimeMiddleware)
+
 const port = 3003;
 
-const dbUrl = 'mongodb://mongodb:27017/products';
+
+const dbUrl = process.env.DATABASE_URL || "mongodb://mongodb:27017/products";
+
 connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
@@ -17,53 +28,76 @@ const ProductSchema = new Schema({
 });
 const Product = model('Product', ProductSchema);
 
-app.use(json());
+// app.use(json());
 
-app.get("/", async (req, res) => {
-    res.json({"Status": `Product Service running on http://localhost:${port}`})
+app.get("/", async (c) => {
+  logger.info("Product Service is running");
+  return c.json({ "Status": `Product Service running on http://localhost:${port}` });
 });
 
-app.get('/products', async (req, res) => {
+app.get('/products', async (c) => {
+  logger.info("Fetching all products");
   const products = await Product.find();
-  res.json(products);
+  return c.json(products);
 });
 
-app.get('/products/:id', async (req, res) => {
-    try {
-        const product = await Product.findById(req.params.id);
-        if (!product) {
-            return res.status(404).json({ message: 'Product not found' });
-        }
-        res.json(product);
-    } catch (error) {
-        res.status(500).json({ message: 'Internal server error', details: error.message });
+app.get('/products/:id', async (c) => {
+  try {
+    const id = c.req.param('id');
+    const product = await Product.findById(id);
+    if (!product) {
+      return c.json({ message: 'Product not found' }, 404);
     }
+    return c.json(product);
+  } catch (error) {
+    return c.json({ message: 'Internal server error', details: error.message }, 500);
+  }
 });
 
-app.post('/products', async (req, res) => {
-  const newProduct = new Product(req.body);
+app.post('/products', async (c) => {
+  const body = await c.req.json();
+  const newProduct = new Product(body);
   await newProduct.save();
-  res.status(201).json(newProduct);
+  return c.json(newProduct, 201);
 });
 
-app.post('/products/:id/decrement-stock', async (req, res) => {
-    const { decrementBy } = req.body;
-    try {
-        const product = await Product.findById(req.params.id);
-        if (!product) {
-            return res.status(404).json({ message: 'Product not found' });
-        }
-        if (product.stock < decrementBy) {
-            return res.status(400).json({ message: 'Insufficient stock' });
-        }
-        product.stock -= decrementBy;
-        await product.save();
-        res.status(200).json(product);
-    } catch (error) {
-        res.status(500).json({ message: 'Internal server error', details: error.message });
+app.post('/products/:id/decrement-stock', async (c) => {
+  const { decrementBy } = await c.req.json();
+  const id = c.req.param('id');
+  try {
+    const product = await Product.findById(id);
+    if (!product) {
+      return c.json({ message: 'Product not found' }, 404);
     }
+    if (product.stock < decrementBy) {
+      return c.json({ message: 'Insufficient stock' }, 400);
+    }
+    product.stock -= decrementBy;
+    await product.save();
+    return c.json(product, 200);
+  } catch (error) {
+    return c.json({ message: 'Internal server error', details: error.message }, 500);
+  }
 });
 
-app.listen(port, () => {
-  console.log(`Product Service running on http://localhost:${port}`);
+app.post('/products/:id/increment-stock', async (c) => {
+  const { incrementBy } = await c.req.json();
+  const id = c.req.param('id');
+
+  try {
+    const product = await Product.findById(id);
+    if (!product) {
+      return c.json({ message: 'Product not found' }, 404);
+    }
+
+    product.stock += incrementBy;
+    await product.save();
+
+    return c.json(product, 200);
+  } catch (error) {
+    return c.json({ message: 'Internal server error', details: error.message }, 500);
+  }
 });
+
+serve({ fetch: app.fetch, port });
+logger.info(`Product Service running on http://localhost:${port}`);
