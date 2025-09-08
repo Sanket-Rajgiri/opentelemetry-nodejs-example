@@ -1,20 +1,21 @@
-# Use the official Node.js 14 image.
-# https://hub.docker.com/_/node
-FROM node:16
+FROM node:22.13.1-alpine AS build
 
-# Create and change to the app directory.
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Copy application dependency manifests to the container image.
-# A wildcard is used to ensure both package.json AND package-lock.json are copied.
-# Copying this separately prevents re-running npm install on every code change.
-COPY package*.json ./
+# Copy package files and install deps
+COPY package.json ./
+RUN npm install
 
-# Install production dependencies.
-RUN npm install 
+# Copy source and build
+COPY src ./src
+COPY tsconfig.json ./
 
-# Copy local code to the container image.
-COPY . .
+RUN npm run build
 
-# Run the web service on container startup.
-CMD ["node", "server.js"]
+FROM gcr.io/distroless/nodejs22-debian12:debug AS final-image
+
+WORKDIR /app
+COPY --chown=nonroot:nonroot --from=build /app/dist ./dist
+COPY --chown=nonroot:nonroot --from=build /app/node_modules ./node_modules
+USER nonroot
+CMD [ "dist/index.js"]
