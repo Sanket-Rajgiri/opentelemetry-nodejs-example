@@ -1,12 +1,22 @@
-import express, { json } from 'express';
+// import express, { json } from 'express';
+// import "./telemetry.js"
+import "./otel/init.js";
+import { Hono } from 'hono';
+import { serve } from '@hono/node-server';
 import fetch from 'node-fetch';
 import mongoose from 'mongoose';
+import logger from './logger.js';
+import {responseTimeMiddleware} from "./middleware/metricsMiddleware.js"
+
 const { connect, Schema, model } = mongoose;
 
-const app = express();
+const app = new Hono();
+app.use("*", responseTimeMiddleware)
 const port = 3002;
 
-const dbUrl = 'mongodb://mongodb:27017/payments';
+const dbUrl = process.env.DATABASE_URL || "mongodb://mongodb:27017/payments";
+const orderServiceUrl = process.env.ORDER_SERVICE_URL || "http://order-service:3001";
+
 connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const PaymentSchema = new Schema({
@@ -17,44 +27,43 @@ const PaymentSchema = new Schema({
 
 const Payment = model('Payment', PaymentSchema);
 
-app.use(json());
+// app.use(json());
 
-app.get("/", async (req, res) => {
-    res.json({"Status": `Payment Service running on http://localhost:${port}`})
+app.get("/", async (c) => {
+    logger.info("Payment Service is running");
+    return c.json({ "Status": `Payment Service running on http://localhost:${port}` });
 });
 
-app.get('/payments', async (req, res) => {
-  const payments = await Payment.find();
-  res.json(payments);
+app.get('/payments', async (c) => {
+    logger.info("Fetching all payments");
+    const payments = await Payment.find();
+    return c.json(payments);
 });
 
-app.post('/payments', async (req, res) => {
+app.post('/payments', async (c) => {
     try {
-        const { orderId, amount } = req.body;
+        const { orderId, amount } = await c.req.json();
 
-        // Fetch the order to check its status and validity
-        const order = await fetch(`http://order:3001/orders/${orderId}`).then(res => res.json());
+        const order = await fetch(`${orderServiceUrl}/orders/${orderId}`).then(res => res.json());
         console.log(order);
         if (!order || order.status !== 'awaiting payment') {
-            return res.status(400).json({ error: 'Invalid order ID or order not ready for payment' });
+            return c.json({ error: 'Invalid order ID or order not ready for payment' }, 400);
         }
 
         const newPayment = new Payment({ orderId, amount });
         await newPayment.save();
 
-        // Optionally, update the order status to 'paid'
-        await fetch(`http://order:3001/orders/${orderId}`, {
+        await fetch(`${orderServiceUrl}/orders/${orderId}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ status: 'paid' })
         });
 
-        res.status(201).json(newPayment);
+        return c.json(newPayment, 201);
     } catch (error) {
-        res.status(500).json({ error: 'Internal server error', details: error.message });
+        return c.json({ error: 'Internal server error', details: error.message }, 500);
     }
 });
 
-app.listen(port, () => {
-    console.log(`Payment Service running on http://localhost:${port}`);
-});
+serve({ fetch: app.fetch, port });
+console.info(`Payment Service running on http://localhost:${port}`);
