@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: otel-collector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: otel-collector
+  template:
+    metadata:
+      labels:
+        app: otel-collector
+    spec:
+      containers:
+        - name: otel-collector
+          image: otel/opentelemetry-collector-contrib:0.128.0
+          args: ["--config=/etc/otel-collector-config.yaml"]
+          ports:
+            - containerPort: 4317
+            - containerPort: 4318
+            - containerPort: 8888
+            - containerPort: 2255
+            - containerPort: 8889
+            - containerPort: 55679
+          env:
+            - name: DD_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: datadog-secret
+                  key: api-key
+          volumeMounts:
+            - name: otel-config
+              mountPath: /etc/otel-collector-config.yaml
+              subPath: otel-collector-config.yaml
+      volumes:
+        - name: otel-config
+          configMap:
+            name: otel-collector-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: otel-collector
+spec:
+  selector:
+    app: otel-collector
+  ports:
+    - port: 4317
+      name: otel-collector-grpc
+      targetPort: 4317
+    - port: 4318
+      name: otel-collector-http
+      targetPort: 4318
+    - port: 8888
+      name: otel-collector-metrics
+      targetPort: 8888
+    - port: 2255
+      name: otel-collector-debug
+      targetPort: 2255
+    - port: 8889
+      name: otel-collector-prometheus
+      targetPort: 8889
+    - port: 55679
+      name: otel-collector-zpages
+      targetPort: 55679

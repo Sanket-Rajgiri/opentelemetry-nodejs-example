@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hono-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hono-app
+  template:
+    metadata:
+      labels:
+        app: hono-app
+    spec:
+      containers:
+        - name: hono-app
+          image: opentelemetry-nodejs-example-hono-app:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          env:
+            - name: DATABASE_URL
+              value: postgresql://root:otel@host.minikube.internal:5432/otel
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://otel-collector:4318
+            - name: OTEL_NODE_RESOURCE_DETECTORS
+              value: env,host,os
+            - name: OTEL_SERVICE_NAME
+              value: hono-drizzle-node-app
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hono-service
+spec:
+  selector:
+    app: hono-app
+  ports:
+    - port: 3000
+      targetPort: 3000

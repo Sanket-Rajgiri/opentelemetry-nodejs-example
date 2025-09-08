@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment-service
+  template:
+    metadata:
+      labels:
+        app: payment-service
+    spec:
+      containers:
+        - name: payment
+          image: opentelemetry-nodejs-example-payment:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3002
+          env:
+            - name: DATABASE_URL
+              value: mongodb://host.minikube.internal:27017/payments
+            - name: ORDER_SERVICE_URL
+              value: http://order-service:3001  
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://otel-collector:4318
+            - name: OTEL_NODE_RESOURCE_DETECTORS
+              value: env,host,os
+            - name: OTEL_SERVICE_NAME
+              value: payment-service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-service
+spec:
+  selector:
+    app: payment-service
+  ports:
+    - port: 3002
+      targetPort: 3002
