@@ -1,0 +1,327 @@
+{
+	"info": {
+		"_postman_id": "9cf2a637-eb0a-4143-99d9-fe12eb918ecf",
+		"name": "Demo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40458053"
+	},
+	"item": [
+		{
+			"name": "getHonoApp",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000",
+					"host": [
+						"localhost"
+					],
+					"port": "3000"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getOrderService",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3001",
+					"host": [
+						"localhost"
+					],
+					"port": "3001"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getPaymentService",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3002/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getProductService",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3003",
+					"host": [
+						"localhost"
+					],
+					"port": "3003"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getUserService",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3004",
+					"host": [
+						"localhost"
+					],
+					"port": "3004"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllOrders",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3001/orders",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllUsers",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3004/users",
+					"host": [
+						"localhost"
+					],
+					"port": "3004",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getHonoUsers",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/users",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getOrderServiceExternal",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3001/external",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"external"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllProducts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3003/products",
+					"host": [
+						"localhost"
+					],
+					"port": "3003",
+					"path": [
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateOrder",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"products\": {\n        \"productId\": \"6630955f0a4796c4f4ccd8bd\",\n        \"quantity\": \"2\"\n    },\n    \"userId\": \"6630b9afc3eb056dba547459\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3001/orders",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createPayment",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"orderId\": \"685e0bb27dae58ddd7ca6ca0\",\n    \"amount\": \"2400\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3002/payments",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"payments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllPayments",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3002/payments",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"payments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getUserServiceExternal",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3004/external/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3004",
+					"path": [
+						"external",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OtelPrometheusEndpoint",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8889/metrics",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8889",
+					"path": [
+						"metrics"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
