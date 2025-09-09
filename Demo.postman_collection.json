@@ -209,7 +209,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"products\": {\n        \"productId\": \"6630955f0a4796c4f4ccd8bd\",\n        \"quantity\": \"2\"\n    },\n    \"userId\": \"6630b9afc3eb056dba547459\"\n}",
+					"raw": "{\n    \"products\": {\n        \"productId\": \"6630b9d45f9bfb341b19995f\",\n        \"quantity\": \"2\"\n    },\n    \"userId\": \"6630b9afc3eb056dba547459\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -239,7 +239,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"orderId\": \"685e0bb27dae58ddd7ca6ca0\",\n    \"amount\": \"2400\"\n}",
+					"raw": "{\n    \"orderId\": \"68bfd815fc90bac782b8da57\",\n    \"amount\": \"60\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -318,6 +318,100 @@
 					"port": "8889",
 					"path": [
 						"metrics"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateHonoUser",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Alice\",\r\n  \"age\": 26,\r\n  \"email\": \"alice@example.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/users",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateHonoUser",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Alice Smith\",\r\n  \"age\": 26,\r\n  \"email\": \"alice.smith@example.com\"\r\n}   "
+				},
+				"url": {
+					"raw": "localhost:3000/users/2",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetHonoUserbyID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/users/2",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteHonoUserbyID",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/users/2",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"2"
 					]
 				}
 			},

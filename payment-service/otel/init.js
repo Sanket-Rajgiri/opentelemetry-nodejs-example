@@ -128,7 +128,7 @@ const sdk = new opentelemetry.NodeSDK({
         enabled: false,
       },
       "@opentelemetry/instrumentation-runtime-node": {
-        enabled: false,
+        enabled: true,
       },
       "@opentelemetry/instrumentation-socket.io": {
         enabled: false,

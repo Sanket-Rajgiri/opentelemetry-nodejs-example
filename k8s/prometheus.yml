@@ -12,6 +12,7 @@ spec:
       labels:
         app: prometheus
     spec:
+      serviceAccountName: otelcontribcol
       containers:
         - name: prometheus
           image: prom/prometheus:v3.4.0

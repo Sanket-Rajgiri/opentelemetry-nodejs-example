@@ -1,9 +1,10 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: DaemonSet
+# kind: Deployment
 metadata:
   name: otel-collector
 spec:
-  replicas: 1
+  # replicas: 1
   selector:
     matchLabels:
       app: otel-collector
@@ -12,6 +13,7 @@ spec:
       labels:
         app: otel-collector
     spec:
+      serviceAccountName: otelcontribcol
       containers:
         - name: otel-collector
           image: otel/opentelemetry-collector-contrib:0.128.0
@@ -37,6 +39,7 @@ kind: Service
 metadata:
   name: otel-collector
 spec:
+  clusterIP: None
   selector:
     app: otel-collector
   ports:

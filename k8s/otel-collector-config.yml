@@ -39,8 +39,20 @@ data:
       batch:
         send_batch_size: 1000
         timeout: 10s
+
+      attributes/rename-trace-span:
+        actions:
+          - key: dd.trace_id
+            from_attribute: trace_id
+            action: insert
+          - key: dd.span_id
+            from_attribute: span_id
+            action: insert
+
       resourcedetection:
-        detectors: [env, system]
+        detectors:
+          - env
+          - system
         timeout: 2s
         system:
           hostname_sources: [os]
