@@ -23,12 +23,6 @@ spec:
             - containerPort: 2255
             - containerPort: 8889
             - containerPort: 55679
-          env:
-            - name: DD_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: datadog-secret
-                  key: api-key
           volumeMounts:
             - name: otel-config
               mountPath: /etc/otel-collector-config.yaml

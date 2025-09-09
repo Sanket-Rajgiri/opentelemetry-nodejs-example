@@ -17,8 +17,8 @@ This repository contains a microservices-based application demonstrating the int
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/Sanket-Rajgiri/opentelemetry-nodejs-example.git
-   cd opentelemetry-nodejs-example
+   git clone https://github.com/Sanket-Rajgiri/opentelemetry-nodejs-example-main.git
+   cd opentelemetry-nodejs-example-main
    ```
 
 2. **Build and run the services using Docker Compose**

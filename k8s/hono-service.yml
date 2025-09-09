@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: hono-app
-          image: opentelemetry-nodejs-example-hono-app:latest
+          image: opentelemetry-nodejs-example-main-hono-app:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000

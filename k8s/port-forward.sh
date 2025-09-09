@@ -9,7 +9,7 @@ declare -A SERVICES=(
   ["user-service"]=3004
 )
 
-NAMESPACE="default"   # Change if your services are in another namespace
+NAMESPACE="demo-app"   # Change if your services are in another namespace
 
 echo "🚀 Checking and starting port-forwarding for services..."
 

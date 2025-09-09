@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: user
-          image: opentelemetry-nodejs-example-user:latest
+          image: opentelemetry-nodejs-example-main-user:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3004
