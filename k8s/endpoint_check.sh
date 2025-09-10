@@ -22,11 +22,10 @@ echo "--------------------------------------------"
 
 for url in "${endpoints[@]}"; do
   echo "👉 Request: $url"
-  
-  # Get status + body
+
   response=$(curl -s -w "\n%{http_code}" "$url")
-  body=$(echo "$response" | head -n -1)
   status=$(echo "$response" | tail -n1)
+  body=$(echo "$response" | sed '$d')   # works on mac + linux
 
   echo "Status: $status"
   echo "Response:"

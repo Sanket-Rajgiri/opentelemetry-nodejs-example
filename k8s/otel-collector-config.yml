@@ -124,6 +124,9 @@ data:
             - tag_name: kube_app_managed_by
               key: app.kubernetes.io/managed-by
               from: pod
+            - tag_name: instance
+              key: kubernetes.io/hostname
+              from: node
 
       memory_limiter:
         check_interval: 1s
@@ -171,6 +174,13 @@ data:
           key: ${env:DD_API_KEY}
       prometheus:
         endpoint: "0.0.0.0:8889"
+        resource_to_telemetry_conversion:
+          enabled: true
+
+      prometheusremotewrite:
+        endpoint: http://victoria-metrics-victoria-metrics-cluster-vminsert:8480/insert/1/prometheus/api/v1/write
+        resource_to_telemetry_conversion:
+          enabled: true
 
     service:
       extensions:
@@ -184,14 +194,15 @@ data:
             - datadog/connector
           processors:
             - memory_limiter
+            - k8sattributes
             - resource
             - resourcedetection
-            - k8sattributes
             # - filter
             - batch
           exporters:
             - datadog
             - prometheus
+            - prometheusremotewrite
             # - debug
         traces:
           receivers:
