@@ -73,10 +73,45 @@ Each service offers several endpoints for interacting with the application:
 
 ## Running in Minikube
 
-- **Build Images Locally** :
+- **Start Databases Locally** :
+  ```bash
+  docker compose up mongodb postgresql -d
+  ```
+- **Load Data in MongoDB Database Running Locally**: Use `/Mock Data` folder to load data in MongoDB Database runnning Locally.
+- **Run DB Migration in Hono-Service App**:
+
+  1. Go to hono-app folder
+
+  ```bash
+  cd hono-drizzle-node-app
+  ```
+
+  2. Install Depedencies
+
+  ```bash
+  npm i
+  ```
+
+  3. Export Postgres `DATABASE_URL`
+
+  ```bash
+  export DATABASE_URL=postgres://root:otel@localhost:5432/otel
+  ```
+
+  4. Run Schema Migration for Postgres Database
+
+  ```bash
+  npm run db:generate
+
+  npm run db:migrate
+  ```
+
+- **Build App Images Locally** :
+
   ```bash
     docker compose build
   ```
+
 - **Load Images in Minikube**:
 
   ```bash
@@ -97,6 +132,12 @@ Each service offers several endpoints for interacting with the application:
 
   ```bash
   k8s/port-forward.sh
+  ```
+
+- **Run EndPoint Check on Port Forwarded Services**:
+
+  ```bash
+  k8s/endpoint_check.sh
   ```
 
 - **Test Endpoints in PostMan or Browser**
