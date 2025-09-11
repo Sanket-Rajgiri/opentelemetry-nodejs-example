@@ -1,4 +1,4 @@
-# opentelemetry-signoz-sample
+# opentelemetry-nodejs-sample
 
 ## Project Overview
 
@@ -25,7 +25,7 @@ A sample Node.js + TypeScript application built using Hono
  and Drizzle ORM which connects  to `Postgresql` Database.
 -**order-service / payment-service / product-service / user-service**
   Microservices implemented in Node.js and TypeScript. Each service contains its own business logic, routes, and configuration. All of these services connect to `MongoDB` Database.
-  
+
 ## Setup Instructions
 
 ### Prerequisites
