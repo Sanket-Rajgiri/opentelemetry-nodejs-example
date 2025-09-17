@@ -21,8 +21,12 @@ spec:
           env:
             - name: DATABASE_URL
               value: mongodb://host.minikube.internal:27017/products
+            - name: HOST_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
-              value: http://otel-collector:4318
+              value: http://$(HOST_IP):4318
             - name: OTEL_NODE_RESOURCE_DETECTORS
               value: env,host,os
             - name: OTEL_SERVICE_NAME

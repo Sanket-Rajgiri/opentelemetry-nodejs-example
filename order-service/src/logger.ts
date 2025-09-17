@@ -2,23 +2,23 @@ import { pino } from "pino";
 import { trace } from "@opentelemetry/api";
 
 const logger = pino({
-    transport: {
-        targets: [
-            {
-                target: "pino-opentelemetry-transport",
-                options: {
-                    resourceAttributes: {
-                        "service.name": "order-service",
-                    },
-                }
-            },
-            {
-                target: "pino-pretty",
-                level: "info",
-                options: { colorize: true },
-            },
-        ],
-    },
+    // transport: {
+    //     targets: [
+    //         {
+    //             target: "pino-opentelemetry-transport",
+    //             options: {
+    //                 resourceAttributes: {
+    //                     "service.name": "order-service",
+    //                 },
+    //             }
+    //         },
+    //         {
+    //             target: "pino-pretty",
+    //             level: "info",
+    //             options: { colorize: true },
+    //         },
+    //     ],
+    // },
     formatters: {
         log(object) {
             const span = trace.getActiveSpan()

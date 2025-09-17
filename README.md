@@ -1,8 +1,30 @@
-# opentelemetry-signoz-sample
+# opentelemetry-nodejs-sample
 
 ## Project Overview
 
 This repository contains a microservices-based application demonstrating the integration of OpenTelemetry for observability. It's designed to showcase how different services such as orders, payments, products, and users can be monitored in a distributed system.
+
+## Directory Structure
+```bash
+├── Mock Data
+├── docs
+├── hono-drizzle-node-app
+├── k8s
+├── order-service
+├── payment-service
+├── product-service
+└── user-service
+```
+### Folder Details 
+- **Mock Data**
+  Contains mock datasets for MongoDB collections, useful for seeding and testing services.
+- **k8s**
+Kubernetes manifests for deploying demo services and the OpenTelemetry Collector (otel-collector).
+- **hono-drizzle-node-app**
+A sample Node.js + TypeScript application built using Hono
+ and Drizzle ORM which connects  to `Postgresql` Database.
+-**order-service / payment-service / product-service / user-service**
+  Microservices implemented in Node.js and TypeScript. Each service contains its own business logic, routes, and configuration. All of these services connect to `MongoDB` Database.
 
 ## Setup Instructions
 
@@ -73,10 +95,45 @@ Each service offers several endpoints for interacting with the application:
 
 ## Running in Minikube
 
-- **Build Images Locally** :
+- **Start Databases Locally** :
+  ```bash
+  docker compose up mongodb postgresql -d
+  ```
+- **Load Data in MongoDB Database Running Locally**: Use `/Mock Data` folder to load data in MongoDB Database runnning Locally.
+- **Run DB Migration in Hono-Service App**:
+
+  1. Go to hono-app folder
+
+  ```bash
+  cd hono-drizzle-node-app
+  ```
+
+  2. Install Depedencies
+
+  ```bash
+  npm i
+  ```
+
+  3. Export Postgres `DATABASE_URL`
+
+  ```bash
+  export DATABASE_URL=postgres://root:otel@localhost:5432/otel
+  ```
+
+  4. Run Schema Migration for Postgres Database
+
+  ```bash
+  npm run db:generate
+
+  npm run db:migrate
+  ```
+
+- **Build App Images Locally** :
+
   ```bash
     docker compose build
   ```
+
 - **Load Images in Minikube**:
 
   ```bash
@@ -97,6 +154,12 @@ Each service offers several endpoints for interacting with the application:
 
   ```bash
   k8s/port-forward.sh
+  ```
+
+- **Run EndPoint Check on Port Forwarded Services**:
+
+  ```bash
+  k8s/endpoint_check.sh
   ```
 
 - **Test Endpoints in PostMan or Browser**
