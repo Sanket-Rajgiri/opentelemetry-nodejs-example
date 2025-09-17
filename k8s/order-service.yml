@@ -27,12 +27,16 @@ spec:
               value: http://user-service:3004
             - name: PRODUCT_SERVICE_URL
               value: http://product-service:3003
-            - name: OTEL_EXPORTER_OTLP_ENDPOINT
-              value: http://otel-collector:4318
             - name: OTEL_NODE_RESOURCE_DETECTORS
               value: env,host,os
             - name: OTEL_SERVICE_NAME
               value: order-service
+            - name: HOST_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://$(HOST_IP):4318
 ---
 apiVersion: v1
 kind: Service

@@ -11,7 +11,17 @@ data:
             endpoint: 0.0.0.0:4317
           http:
             endpoint: 0.0.0.0:4318
-
+      filelog:
+        include: 
+          - /var/log/pods/*/*/*.log
+        include_file_name: false
+        include_file_path: true
+        exclude:
+          - /var/log/pods/kube-system*/*/*.log
+          - /var/log/pods/*otel-collector*/*/*.log
+        start_at: end
+        operators:
+          - type: container        
       hostmetrics:
         collection_interval: 60s
         scrapers:
@@ -178,7 +188,7 @@ data:
           enabled: true
 
       prometheusremotewrite:
-        endpoint: http://victoria-metrics-victoria-metrics-cluster-vminsert:8480/insert/1/prometheus/api/v1/write
+        endpoint: http://vmcluster-victoria-metrics-cluster-vminsert.default.svc.cluster.local:8480/insert/0/prometheus
         resource_to_telemetry_conversion:
           enabled: true
 
@@ -216,12 +226,12 @@ data:
             # - debug
         logs:
           receivers:
-            - otlp
+            - filelog
           processors:
             - memory_limiter
             - attributes/rename-trace-span
             - batch
           exporters:
             - datadog
-            # - debug
+            - debug
 

@@ -11,7 +11,7 @@ COPY . .
 
 RUN npm run build
 
-FROM gcr.io/distroless/nodejs22-debian12 AS final-image
+FROM gcr.io/distroless/nodejs22-debian12:debug AS final-image
 
 WORKDIR /app
 COPY --chown=nonroot:nonroot --from=build /app/dist ./dist
