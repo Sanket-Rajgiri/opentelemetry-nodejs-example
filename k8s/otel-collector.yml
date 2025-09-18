@@ -61,7 +61,7 @@ kind: Service
 metadata:
   name: otel-collector
 spec:
-  clusterIP: None
+  #clusterIP: None
   selector:
     app: otel-collector
   ports:

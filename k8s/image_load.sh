@@ -2,11 +2,11 @@
 
 # List of images to load into Minikube
 IMAGES=(
-  "opentelemetry-nodejs-example-main-main-order:latest"
-  "opentelemetry-nodejs-example-main-main-hono-app:latest"
-  "opentelemetry-nodejs-example-main-main-payment:latest"
-  "opentelemetry-nodejs-example-main-main-product:latest"
-  "opentelemetry-nodejs-example-main-main-user:latest"
+  "opentelemetry-nodejs-example-order:latest"
+  "opentelemetry-nodejs-example-hono-app:latest"
+  "opentelemetry-nodejs-example-payment:latest"
+  "opentelemetry-nodejs-example-product:latest"
+  "opentelemetry-nodejs-example-user:latest"
 )
 
 echo "🚀 Loading images into Minikube..."
